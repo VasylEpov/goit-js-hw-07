@@ -11,10 +11,6 @@ const markupGallery = createGaleryMarkup(galleryItems);
 
 //events
 galleryContainer.insertAdjacentHTML('beforeend', markupGallery);
-
-
-galleryContainer.addEventListener('click', onGalleryClick);
-
   
 //functions
 function createGaleryMarkup(galleryItems) {
@@ -34,27 +30,28 @@ function createGaleryMarkup(galleryItems) {
     }).join('');
 }
 
+galleryContainer.onclick = (event) => {
+  event.preventDefault();
+  const { target } = event;
+  if (target.nodeName !== "IMG") return;
 
-function onGalleryClick(event) {
-    event.preventDefault();
-    const { target } = event;
-    if (target.nodeName !== "IMG") return;
-
-    const instance = basicLightbox.create(
-        `<img src="${target.dataset.source}" width="800" height="600">`
-      );
-      instance.show();
-      document.body.style = "overflow: hidden; height: 100vh;";
-    
-      window.addEventListener("keydown", onEscKeyClick);
-
-      function onEscKeyClick(event) {
-        if (event.code === "Escape" && instance.visible()) {
+  basicLightbox.create(`<img src="${target.dataset.source}" width="800" height="600">`,
+  {
+    onShow: (instance) => {
+      window.addEventListener("keydown", function(event) {
+        if (event.code === "Escape") {
           instance.close();
           document.body.style = "";
-          window.removeEventListener("keydown", onEscKeyClick);
         }
-      }
+      })
+    },
+    onClose: () => {
+      window.addEventListener("remove", function(event) {
+        if (event.code === "Escape") {
+          instance.close();
+          document.body.style = "";
+        }
+      })
     }
-
-
+  }).show()
+} 

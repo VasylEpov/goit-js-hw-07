@@ -39,12 +39,11 @@ function onGalleryClick(event) {
     }
   
     const lightbox = new SimpleLightbox(".gallery a", {
-      captionSelector: "self",
       captionType: "attr",
-      captionsData: "data-caption",
+      captionsData: "alt",
       captionPosition : "bottom",
       captionDelay: 250,
-      closeOnEscape: true,
+      closeOnEscape: true
     });
 
    
